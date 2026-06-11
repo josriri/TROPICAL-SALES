@@ -1,4 +1,9 @@
-// Load env vars first — must be before any other imports
+// Load env app.use(express.json());
+vars first — must be before any other imports
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+app.use(express.static(join(__dirname, "public")));
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
