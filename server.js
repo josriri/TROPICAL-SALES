@@ -6,17 +6,25 @@ import Anthropic from "@anthropic-ai/sdk";
 
 const app = express();
 
-// Explicitly allow all origins including claude.ai artifacts
+// Allow all origins — covers Vercel frontend, local dev, and Claude artifacts
 app.use(cors({
   origin: "*",
   methods: ["GET", "POST", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
 }));
 
-// Handle preflight OPTIONS requests for all routes
+// Explicitly handle preflight for all routes
 app.options("*", cors());
 
 app.use(express.json());
+
+// ── Serve frontend ────────────────────────────────────────────────────────────
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+app.use(express.static(join(__dirname, "public")));
 
 // ── Validate required env vars on startup ────────────────────────────────────
 const REQUIRED = ["CHATKAZI_API_KEY", "ANTHROPIC_API_KEY"];
